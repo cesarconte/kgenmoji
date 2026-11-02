@@ -1,0 +1,2 @@
+/home/cesar/.local/bin/kgenmoji
+/home/cesar/.local/share/applications/org.cesar.kgenmoji.desktop

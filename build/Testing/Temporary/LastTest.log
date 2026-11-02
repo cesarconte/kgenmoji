@@ -1,0 +1,43 @@
+Start testing: Nov 02 09:45 CET
+----------------------------------------------------------
+1/2 Testing: appstreamtest
+1/2 Test: appstreamtest
+Command: "/usr/bin/cmake" "-DAPPSTREAMCLI=/usr/bin/appstreamcli" "-DINSTALL_FILES=/home/cesar/Proyectos/kgenmoji/build/install_manifest.txt" "-P" "/usr/share/ECM/kde-modules/appstreamtest.cmake"
+Directory: /home/cesar/Proyectos/kgenmoji/build
+"appstreamtest" start time: Nov 02 09:45 CET
+Output:
+----------------------------------------------------------
+Not installed yet, skipping
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"appstreamtest" end time: Nov 02 09:45 CET
+"appstreamtest" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/2 Testing: test_kgenmoji
+2/2 Test: test_kgenmoji
+Command: "/home/cesar/Proyectos/kgenmoji/build/bin/test_kgenmoji"
+Directory: /home/cesar/Proyectos/kgenmoji/build/tests
+"test_kgenmoji" start time: Nov 02 09:45 CET
+Output:
+----------------------------------------------------------
+********* Start testing of TestKGenmoji *********
+Config: Using QtTest library 6.12.0, Qt 6.12.0 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 16.2.1 20260810), cachyos unknown
+PASS   : TestKGenmoji::initTestCase()
+PASS   : TestKGenmoji::testInitialization()
+PASS   : TestKGenmoji::testMashupSelection()
+PASS   : TestKGenmoji::testRecentStickersStorage()
+PASS   : TestKGenmoji::cleanupTestCase()
+Totals: 5 passed, 0 failed, 0 skipped, 0 blacklisted, 0ms
+********* Finished testing of TestKGenmoji *********
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"test_kgenmoji" end time: Nov 02 09:45 CET
+"test_kgenmoji" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 02 09:45 CET

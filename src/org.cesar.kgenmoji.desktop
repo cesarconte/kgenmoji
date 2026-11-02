@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=KGenmoji
+Comment=Generador expresivo de Genmojis y Stickers con IA para KDE Plasma
+Exec=kgenmoji
+Icon=face-smile
+Type=Application
+Terminal=false
+Categories=Graphics;Utility;KDE;Qt;
+StartupNotify=true
+X-KDE-SubstituteUID=false

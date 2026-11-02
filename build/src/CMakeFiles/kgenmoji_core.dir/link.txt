@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../lib/libkgenmoji_core.a CMakeFiles/kgenmoji_core.dir/kgenmoji_core_autogen/mocs_compilation.cpp.o CMakeFiles/kgenmoji_core.dir/genmojicontroller.cpp.o
+/usr/bin/ranlib ../lib/libkgenmoji_core.a
