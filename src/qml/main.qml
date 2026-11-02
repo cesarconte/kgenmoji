@@ -10,80 +10,55 @@ import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 
-Window {
+Kirigami.ApplicationWindow {
     id: rootWindow
     width: 580
     height: 640
     visible: true
-    color: "transparent"
-    flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
-    title: "KGenmoji"
+    title: i18n("KGenmoji — Creador de Genmojis y Stickers")
 
-    Rectangle {
-        id: mainSurface
+    ColumnLayout {
         anchors.fill: parent
-        anchors.margins: Kirigami.Units.smallSpacing
-        radius: Kirigami.Units.largeSpacing
-        color: Kirigami.Theme.backgroundColor
-        border.width: 1
-        border.color: Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.18)
+        anchors.margins: Kirigami.Units.largeSpacing
+        spacing: Kirigami.Units.mediumSpacing
 
-        ColumnLayout {
-            anchors.fill: parent
-            anchors.margins: Kirigami.Units.largeSpacing
-            spacing: Kirigami.Units.mediumSpacing
+        // Top Header: Title + Actions
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: Kirigami.Units.smallSpacing
 
-            // Top Header: Title + Actions
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Kirigami.Units.smallSpacing
-
-                Kirigami.Icon {
-                    source: "face-smile"
-                    implicitWidth: Kirigami.Units.iconSizes.medium
-                    implicitHeight: Kirigami.Units.iconSizes.medium
-                    color: Kirigami.Theme.highlightColor
-                }
-
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing: 0
-
-                    QQC2.Label {
-                        text: "KGenmoji"
-                        font.pixelSize: 16
-                        font.bold: true
-                        color: Kirigami.Theme.textColor
-                    }
-
-                    QQC2.Label {
-                        text: "Genmojis y Stickers con IA · Wayland"
-                        font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-                        color: Kirigami.Theme.disabledTextColor
-                    }
-                }
-
-                QQC2.ToolButton {
-                    icon.name: "folder-pictures-symbolic"
-                    QQC2.ToolTip.visible: hovered
-                    QQC2.ToolTip.text: "Abrir carpeta de stickers (~/.local/share/kgenmoji/stickers)"
-                    onClicked: Genmoji.openStickersFolder()
-                }
-
-                QQC2.ToolButton {
-                    icon.name: "view-refresh-symbolic"
-                    QQC2.ToolTip.visible: hovered
-                    QQC2.ToolTip.text: "Actualizar stickers"
-                    onClicked: Genmoji.refreshRecentStickers()
-                }
-
-                QQC2.ToolButton {
-                    icon.name: "window-close-symbolic"
-                    QQC2.ToolTip.visible: hovered
-                    QQC2.ToolTip.text: "Cerrar"
-                    onClicked: Qt.quit()
-                }
+            Kirigami.Icon {
+                source: "face-smile"
+                implicitWidth: Kirigami.Units.iconSizes.smallMedium
+                implicitHeight: Kirigami.Units.iconSizes.smallMedium
+                color: Kirigami.Theme.highlightColor
             }
+
+            QQC2.Label {
+                text: "Genmojis y Stickers con IA"
+                font.bold: true
+                color: Kirigami.Theme.textColor
+                Layout.fillWidth: true
+            }
+
+            QQC2.ToolButton {
+                icon.name: "folder-pictures-symbolic"
+                text: "Abrir carpeta"
+                display: QQC2.AbstractButton.TextBesideIcon
+                QQC2.ToolTip.visible: hovered
+                QQC2.ToolTip.text: "Abrir carpeta de stickers (~/.local/share/kgenmoji/stickers)"
+                onClicked: Genmoji.openStickersFolder()
+            }
+
+            QQC2.ToolButton {
+                icon.name: "view-refresh-symbolic"
+                text: "Actualizar"
+                display: QQC2.AbstractButton.TextBesideIcon
+                QQC2.ToolTip.visible: hovered
+                QQC2.ToolTip.text: "Actualizar stickers"
+                onClicked: Genmoji.refreshRecentStickers()
+            }
+        }
 
             // Navigation Tabs
             QQC2.TabBar {
@@ -479,5 +454,4 @@ Window {
                 }
             }
         }
-    }
 }
