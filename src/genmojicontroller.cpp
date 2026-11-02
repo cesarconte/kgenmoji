@@ -71,57 +71,42 @@ void GenmojiController::initStorage()
 
 void GenmojiController::loadCuratedMashups()
 {
-    // Curated high-resolution Google Emoji Kitchen combinations with reliable gstatic CDN endpoints
+    // Curated high-resolution Google Emoji Kitchen combinations with verified gstatic CDN endpoints
     m_curatedMashups = QVariantList{
         QVariantMap{
             {QStringLiteral("name"), QStringLiteral("Gato Vaquero")},
             {QStringLiteral("emojis"), QStringLiteral("🐱 + 🤠")},
-            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u1f431/u1f431_u1f920.png")}
-        },
-        QVariantMap{
-            {QStringLiteral("name"), QStringLiteral("Astro Perro")},
-            {QStringLiteral("emojis"), QStringLiteral("🐶 + 🚀")},
-            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u1f436/u1f436_u1f680.png")}
+            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20230301/u1f920/u1f920_u1f431.png")}
         },
         QVariantMap{
             {QStringLiteral("name"), QStringLiteral("Café con Amor")},
             {QStringLiteral("emojis"), QStringLiteral("☕ + ❤️")},
-            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u2615/u2615_u2764-ufe0f.png")}
+            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20240610/u2764-ufe0f-u200d-u1fa79/u2764-ufe0f-u200d-u1fa79_u2615.png")}
         },
         QVariantMap{
             {QStringLiteral("name"), QStringLiteral("Pizza Picante")},
             {QStringLiteral("emojis"), QStringLiteral("🍕 + 🔥")},
-            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u1f355/u1f355_u1f525.png")}
+            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20241021/u1f355/u1f355_u1f525.png")}
         },
         QVariantMap{
             {QStringLiteral("name"), QStringLiteral("Príncipe Rana")},
             {QStringLiteral("emojis"), QStringLiteral("🐸 + 👑")},
-            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u1f438/u1f438_u1f451.png")}
+            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20230803/u1f438/u1f438_u1f451.png")}
         },
         QVariantMap{
             {QStringLiteral("name"), QStringLiteral("Robot Enamorado")},
             {QStringLiteral("emojis"), QStringLiteral("🤖 + ❤️")},
-            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u1f916/u1f916_u2764-ufe0f.png")}
-        },
-        QVariantMap{
-            {QStringLiteral("name"), QStringLiteral("Panda de Fiesta")},
-            {QStringLiteral("emojis"), QStringLiteral("🐼 + 🎉")},
-            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u1f43c/u1f43c_u1f389.png")}
+            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20240206/u1f916/u1f916_u2764-ufe0f.png")}
         },
         QVariantMap{
             {QStringLiteral("name"), QStringLiteral("Aguacate Sonriente")},
             {QStringLiteral("emojis"), QStringLiteral("🥑 + 🥰")},
-            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u1f951/u1f951_u1f970.png")}
+            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u1f970/u1f970_u1f951.png")}
         },
         QVariantMap{
             {QStringLiteral("name"), QStringLiteral("Fantasma Cool")},
             {QStringLiteral("emojis"), QStringLiteral("👻 + 😎")},
-            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u1f47b/u1f47b_u1f60e.png")}
-        },
-        QVariantMap{
-            {QStringLiteral("name"), QStringLiteral("Mono Detective")},
-            {QStringLiteral("emojis"), QStringLiteral("🐵 + 🕵️")},
-            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u1f435/u1f435_u1f575-ufe0f.png")}
+            {QStringLiteral("url"), QStringLiteral("https://www.gstatic.com/android/keyboard/emojikitchen/20230301/u1f60e/u1f60e_u1f47b.png")}
         }
     };
 
