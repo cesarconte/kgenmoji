@@ -1,7 +1,0 @@
-set(__QT_DEPLOY_TARGETS "kgenmoji_core;kgenmoji;test_kgenmoji")
-set(__QT_DEPLOY_TARGET_kgenmoji_core_FILE /home/cesar/Proyectos/kgenmoji/build/lib/libkgenmoji_core.a)
-set(__QT_DEPLOY_TARGET_kgenmoji_core_TYPE STATIC_LIBRARY)
-set(__QT_DEPLOY_TARGET_kgenmoji_FILE /home/cesar/Proyectos/kgenmoji/build/bin/kgenmoji)
-set(__QT_DEPLOY_TARGET_kgenmoji_TYPE EXECUTABLE)
-set(__QT_DEPLOY_TARGET_test_kgenmoji_FILE /home/cesar/Proyectos/kgenmoji/build/bin/test_kgenmoji)
-set(__QT_DEPLOY_TARGET_test_kgenmoji_TYPE EXECUTABLE)

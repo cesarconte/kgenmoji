@@ -1,9 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/home/cesar/Proyectos/kgenmoji/build/cmake_install.cmake",
-		"/home/cesar/Proyectos/kgenmoji/build/src/cmake_install.cmake",
-		"/home/cesar/Proyectos/kgenmoji/build/tests/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

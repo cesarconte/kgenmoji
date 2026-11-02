@@ -1,3 +1,0 @@
-appstreamtest 1 0.00510658
-test_kgenmoji 1 0.0331888
----
