@@ -1,6 +1,17 @@
 /*
     SPDX-FileCopyrightText: 2026 Cesar
     SPDX-License-Identifier: GPL-3.0-or-later
+
+    KGenmoji — Creador de Genmojis y Stickers con IA local.
+
+    Diseño Golden Gate / Liquid Glass (CachyOS.UI):
+      * ventana `CachyWindow` con marco translúcido, cabecera de 44 px con el
+        divisor duro de 1 px y radio de 20 px;
+      * la navegación por pestañas son píldoras de cristal en la cabecera y las
+        acciones de carpeta y actualización a su derecha;
+      * cada superficie (mezclador, creador y galería) se presenta sobre
+        `CachyCard`;
+      * toda la paleta, los radios y los espaciados salen de `CachyTheme`.
 */
 
 pragma ComponentBehavior: Bound
@@ -9,285 +20,325 @@ import QtQuick
 import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
+import CachyOS.UI
 
-Kirigami.ApplicationWindow {
+CachyWindow {
     id: rootWindow
-    width: 580
-    height: 640
+
+    title: CachyI18n.i18n("KGenmoji — Creador de Genmojis y Stickers")
+
+    // Canonical window metrics of the design system: the three views need a
+    // landscape shape to breathe.
+    width: CachyTheme.windowWidthSettings
+    height: CachyTheme.windowHeightSettings
+    minimumWidth: 640
+    minimumHeight: 520
     visible: true
-    title: i18n("KGenmoji — Creador de Genmojis y Stickers")
 
-    ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: Kirigami.Units.largeSpacing
-        spacing: Kirigami.Units.mediumSpacing
+    showTrafficLights: true
+    showTitleBarDivider: true          // divisor duro de 1 px
+    showWindowFrame: true              // Liquid Glass: blur KWin + rim especular
+    resizable: true
+    cornerRadius: CachyTheme.radiusWindow
+    contentPadded: true                // margen perimetral de 18 px
 
-        // Top Header: Title + Actions
+    // Página activa: 0 = mezclador, 1 = creador, 2 = galería
+    property int currentPage: 0
+
+    // =========================================================================
+    // CABECERA — IZQUIERDA: marca
+    // =========================================================================
+    headerLeading: [
+        Kirigami.Icon {
+            anchors.verticalCenter: parent.verticalCenter
+            source: "face-smile-symbolic"
+            width: 18
+            height: 18
+            color: CachyTheme.accentColor
+        }
+    ]
+
+    // =========================================================================
+    // CABECERA — DERECHA: navegación y acciones
+    // =========================================================================
+    headerActions: [
         RowLayout {
-            Layout.fillWidth: true
-            spacing: Kirigami.Units.smallSpacing
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 6
 
-            Kirigami.Icon {
-                source: "face-smile"
-                implicitWidth: Kirigami.Units.iconSizes.smallMedium
-                implicitHeight: Kirigami.Units.iconSizes.smallMedium
-                color: Kirigami.Theme.highlightColor
+            // --- Navegación por pestañas ---
+            CachyToolbarButton {
+                checkable: true
+                checked: rootWindow.currentPage === 0
+                text: CachyI18n.i18n("Mezclador")
+                tooltipText: CachyI18n.i18n("Mezclar emojis prediseñados")
+                onToggled: (nextState) => {
+                    if (nextState) {
+                        rootWindow.currentPage = 0;
+                    }
+                }
             }
 
-            QQC2.Label {
-                text: "Genmojis y Stickers con IA"
-                font.bold: true
-                color: Kirigami.Theme.textColor
-                Layout.fillWidth: true
+            CachyToolbarButton {
+                checkable: true
+                checked: rootWindow.currentPage === 1
+                text: CachyI18n.i18n("Creador IA")
+                tooltipText: CachyI18n.i18n("Generar un sticker con IA local")
+                onToggled: (nextState) => {
+                    if (nextState) {
+                        rootWindow.currentPage = 1;
+                    }
+                }
             }
 
-            QQC2.ToolButton {
-                icon.name: "folder-pictures-symbolic"
-                text: "Abrir carpeta"
-                display: QQC2.AbstractButton.TextBesideIcon
-                QQC2.ToolTip.visible: hovered
-                QQC2.ToolTip.text: "Abrir carpeta de stickers (~/.local/share/kgenmoji/stickers)"
+            CachyToolbarButton {
+                checkable: true
+                checked: rootWindow.currentPage === 2
+                text: CachyI18n.i18n("Mis Stickers (%1)").arg(Genmoji.recentStickers.length)
+                tooltipText: CachyI18n.i18n("Galería de stickers guardados")
+                onToggled: (nextState) => {
+                    if (nextState) {
+                        rootWindow.currentPage = 2;
+                    }
+                }
+            }
+
+            // Separador duro antes de las acciones de archivo
+            Rectangle {
+                Layout.preferredWidth: 1
+                Layout.preferredHeight: 18
+                Layout.alignment: Qt.AlignVCenter
+                color: CachyTheme.hardDividerColor
+            }
+
+            CachyToolbarButton {
+                iconName: "folder-pictures-symbolic"
+                tooltipText: CachyI18n.i18n("Abrir la carpeta de stickers (~/.local/share/kgenmoji/stickers)")
                 onClicked: Genmoji.openStickersFolder()
             }
 
-            QQC2.ToolButton {
-                icon.name: "view-refresh-symbolic"
-                text: "Actualizar"
-                display: QQC2.AbstractButton.TextBesideIcon
-                QQC2.ToolTip.visible: hovered
-                QQC2.ToolTip.text: "Actualizar stickers"
+            CachyToolbarButton {
+                iconName: "view-refresh-symbolic"
+                tooltipText: CachyI18n.i18n("Actualizar los stickers")
                 onClicked: Genmoji.refreshRecentStickers()
             }
         }
+    ]
 
-            // Navigation Tabs
-            QQC2.TabBar {
-                id: tabNav
-                Layout.fillWidth: true
-                currentIndex: 0
+    // =========================================================================
+    // CONTENIDO
+    // =========================================================================
+    contentData: [
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: CachyTheme.spacingMedium
 
-                QQC2.TabButton {
-                    text: "✨ Mezclador Emoji"
-                    width: implicitWidth
-                }
-                QQC2.TabButton {
-                    text: "🎨 Creador IA"
-                    width: implicitWidth
-                }
-                QQC2.TabButton {
-                    text: "📁 Mis Stickers (" + Genmoji.recentStickers.length + ")"
-                    width: implicitWidth
-                }
-            }
-
-            // Tab Content Stack
             StackLayout {
-                id: stackContent
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                currentIndex: tabNav.currentIndex
+                Layout.minimumWidth: 0
+                currentIndex: rootWindow.currentPage
 
-                // ==================== TAB 0: EMOJI KITCHEN MASHUPS ====================
-                ColumnLayout {
-                    spacing: Kirigami.Units.mediumSpacing
+                // ==================== PÁGINA 0: MEZCLADOR DE EMOJIS ============
+                RowLayout {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.minimumWidth: 0
+                    spacing: CachyTheme.spacingMedium
 
-                    RowLayout {
+                    // --- Lista de combinaciones ---
+                    CachyCard {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-                        spacing: Kirigami.Units.mediumSpacing
+                        Layout.minimumWidth: 0
+                        Layout.preferredWidth: 3
 
-                        // Left: Curated Mashup Grid
-                        Rectangle {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: 3
-                            radius: Kirigami.Units.mediumSpacing
-                            color: Kirigami.Theme.alternateBackgroundColor
-                            border.width: 1
-                            border.color: Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.12)
+                        contentItem: QQC2.ScrollView {
+                            id: mashupScroll
+                            clip: true
+                            QQC2.ScrollBar.vertical.policy: QQC2.ScrollBar.AsNeeded
 
-                            QQC2.ScrollView {
-                                anchors.fill: parent
-                                anchors.margins: Kirigami.Units.smallSpacing
-                                clip: true
+                            ListView {
+                                id: mashupList
+                                spacing: 4
+                                model: Genmoji.curatedMashups
 
-                                ListView {
-                                    id: mashupList
-                                    anchors.fill: parent
-                                    spacing: 4
-                                    model: Genmoji.curatedMashups
+                                delegate: Rectangle {
+                                    id: mashupDelegate
+                                    required property var modelData
+                                    required property int index
 
-                                    delegate: Rectangle {
-                                        id: mashupDelegate
-                                        required property var modelData
-                                        required property int index
-                                        width: ListView.view.width
-                                        height: 44
-                                        radius: 6
-                                        color: ListView.isCurrentItem
-                                            ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.18)
-                                            : (mashupMouse.containsMouse
-                                                ? Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.alternateBackgroundColor, Kirigami.Theme.textColor, 0.08)
-                                                : Kirigami.Theme.backgroundColor)
-                                        border.width: 1
-                                        border.color: ListView.isCurrentItem
-                                            ? Kirigami.Theme.highlightColor
-                                            : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.10)
+                                    width: ListView.view ? ListView.view.width : 0
+                                    height: 44
+                                    radius: CachyTheme.radiusSmall
+                                    color: ListView.isCurrentItem
+                                        ? CachyTheme.withAlpha(CachyTheme.accentColor, 0.18)
+                                        : (mashupMouse.containsMouse
+                                            ? CachyTheme.cardBackgroundHover
+                                            : "transparent")
+                                    border.width: 1
+                                    border.color: ListView.isCurrentItem
+                                        ? CachyTheme.accentColor
+                                        : CachyTheme.specularBorder
 
-                                        RowLayout {
-                                            anchors.fill: parent
-                                            anchors.leftMargin: 8
-                                            anchors.rightMargin: 8
-                                            spacing: 8
+                                    Behavior on color {
+                                        ColorAnimation { duration: 120 }
+                                    }
 
-                                            QQC2.Label {
-                                                text: mashupDelegate.modelData.emojis
-                                                font.pixelSize: 18
-                                            }
+                                    RowLayout {
+                                        anchors.fill: parent
+                                        anchors.leftMargin: 8
+                                        anchors.rightMargin: 8
+                                        spacing: 8
 
-                                            QQC2.Label {
-                                                Layout.fillWidth: true
-                                                text: mashupDelegate.modelData.name
-                                                font.bold: mashupList.currentIndex === mashupDelegate.index
-                                                color: Kirigami.Theme.textColor
-                                                elide: Text.ElideRight
-                                            }
+                                        Text {
+                                            text: mashupDelegate.modelData.emojis
+                                            font.pixelSize: 18
                                         }
 
-                                        MouseArea {
-                                            id: mashupMouse
-                                            anchors.fill: parent
-                                            hoverEnabled: true
-                                            cursorShape: Qt.PointingHandCursor
-                                            onClicked: {
-                                                mashupList.currentIndex = mashupDelegate.index
-                                                Genmoji.selectMashup(mashupDelegate.index)
-                                            }
+                                        Text {
+                                            Layout.fillWidth: true
+                                            Layout.minimumWidth: 0
+                                            text: mashupDelegate.modelData.name
+                                            font.pixelSize: 12
+                                            font.weight: mashupList.currentIndex === mashupDelegate.index
+                                                ? Font.Bold
+                                                : Font.Normal
+                                            color: CachyTheme.textPrimary
+                                            elide: Text.ElideRight
+                                        }
+                                    }
+
+                                    HoverHandler {
+                                        id: mashupMouse
+                                        cursorShape: Qt.PointingHandCursor
+                                    }
+
+                                    TapHandler {
+                                        onTapped: {
+                                            mashupList.currentIndex = mashupDelegate.index;
+                                            Genmoji.selectMashup(mashupDelegate.index);
                                         }
                                     }
                                 }
                             }
                         }
+                    }
 
-                        // Right: Live Big Preview & Copy
-                        Rectangle {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: 2
-                            radius: Kirigami.Units.mediumSpacing
-                            color: Kirigami.Theme.alternateBackgroundColor
-                            border.width: 1
-                            border.color: Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.12)
+                    // --- Vista previa grande ---
+                    CachyCard {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.minimumWidth: 0
+                        Layout.preferredWidth: 2
 
-                            ColumnLayout {
-                                anchors.fill: parent
-                                anchors.margins: Kirigami.Units.mediumSpacing
-                                spacing: Kirigami.Units.smallSpacing
+                        contentItem: ColumnLayout {
+                            spacing: CachyTheme.spacingSmall
 
-                                Item {
-                                    Layout.fillWidth: true
-                                    Layout.fillHeight: true
+                            Item {
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
 
-                                    Image {
-                                        anchors.centerIn: parent
-                                        width: Math.min(parent.width - 16, parent.height - 16)
-                                        height: width
-                                        source: Genmoji.currentMashupUrl
-                                        fillMode: Image.PreserveAspectFit
-                                        smooth: true
-                                    }
+                                Image {
+                                    anchors.centerIn: parent
+                                    width: Math.min(parent.width - 16, parent.height - 16)
+                                    height: width
+                                    source: Genmoji.currentMashupUrl
+                                    fillMode: Image.PreserveAspectFit
+                                    smooth: true
                                 }
+                            }
 
-                                QQC2.Button {
-                                    Layout.fillWidth: true
-                                    icon.name: "edit-copy-symbolic"
-                                    text: "Copiar al portapapeles"
-                                    highlighted: true
-                                    onClicked: Genmoji.copyMashupToClipboard(Genmoji.currentMashupUrl)
-                                }
+                            CachyToolbarButton {
+                                Layout.fillWidth: true
+                                iconName: "edit-copy-symbolic"
+                                text: CachyI18n.i18n("Copiar al portapapeles")
+                                primary: true
+                                onClicked: Genmoji.copyMashupToClipboard(Genmoji.currentMashupUrl)
                             }
                         }
                     }
                 }
 
-                // ==================== TAB 1: AI STICKER CREATOR ====================
+                // ==================== PÁGINA 1: CREADOR DE STICKERS ============
                 ColumnLayout {
-                    spacing: Kirigami.Units.mediumSpacing
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.minimumWidth: 0
+                    spacing: CachyTheme.spacingMedium
 
-                    // Prompt Box
+                    // --- Descripción y estilo ---
                     RowLayout {
                         Layout.fillWidth: true
-                        spacing: Kirigami.Units.smallSpacing
+                        Layout.minimumWidth: 0
+                        spacing: 8
 
-                        QQC2.TextField {
+                        CachyTextField {
                             id: promptInput
                             Layout.fillWidth: true
-                            placeholderText: "Describe tu Genmoji o sticker (ej: «Gato astronauta con guitarra»)..."
-                            color: Kirigami.Theme.textColor
+                            Layout.minimumWidth: 0
+                            placeholderText: CachyI18n.i18n("Describe tu Genmoji o sticker (ej: «Gato astronauta con guitarra»)…")
                             font.pixelSize: 13
                             onAccepted: {
                                 if (text.trim().length > 0 && !Genmoji.isGenerating) {
-                                    Genmoji.generateAiSticker(text.trim(), styleSelector.currentText)
+                                    Genmoji.generateAiSticker(text.trim(), styleSelector.currentText);
                                 }
                             }
                         }
 
                         QQC2.ComboBox {
                             id: styleSelector
-                            implicitWidth: 130
+                            Layout.preferredWidth: 140
+                            Layout.preferredHeight: 32
+                            font.pixelSize: 12
                             model: ["3D Emoji", "Caricatura", "Pixel Art", "Pegatina Vector"]
                         }
 
-                        QQC2.Button {
-                            icon.name: "sparkles-symbolic"
-                            text: "Crear Sticker"
-                            highlighted: true
+                        CachyToolbarButton {
+                            iconName: "sparkles-symbolic"
+                            text: CachyI18n.i18n("Crear Sticker")
+                            primary: true
                             enabled: promptInput.text.trim().length > 0 && !Genmoji.isGenerating
                             onClicked: {
-                                Genmoji.generateAiSticker(promptInput.text.trim(), styleSelector.currentText)
+                                Genmoji.generateAiSticker(promptInput.text.trim(), styleSelector.currentText);
                             }
                         }
                     }
 
-                    // Preview Stage
-                    Rectangle {
+                    // --- Escenario de previsualización ---
+                    CachyCard {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-                        radius: Kirigami.Units.mediumSpacing
-                        color: Kirigami.Theme.alternateBackgroundColor
-                        border.width: 1
-                        border.color: Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.12)
-                        clip: true
+                        Layout.minimumWidth: 0
 
-                        ColumnLayout {
-                            anchors.fill: parent
-                            anchors.margins: Kirigami.Units.largeSpacing
-                            spacing: Kirigami.Units.mediumSpacing
+                        contentItem: ColumnLayout {
+                            spacing: CachyTheme.spacingSmall
 
                             Item {
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
 
-                                // Busy Indicator while generating
+                                // Generando
                                 ColumnLayout {
                                     anchors.centerIn: parent
                                     visible: Genmoji.isGenerating
-                                    spacing: Kirigami.Units.mediumSpacing
+                                    spacing: CachyTheme.spacingSmall
 
                                     QQC2.BusyIndicator {
                                         Layout.alignment: Qt.AlignHCenter
                                         running: Genmoji.isGenerating
                                     }
 
-                                    QQC2.Label {
+                                    Text {
                                         Layout.alignment: Qt.AlignHCenter
-                                        text: "Generando y perfilando sticker con KLiftSubject…"
-                                        color: Kirigami.Theme.textColor
-                                        font.bold: true
+                                        text: CachyI18n.i18n("Generando y perfilando el sticker…")
+                                        color: CachyTheme.textPrimary
+                                        font.pixelSize: 13
+                                        font.weight: Font.DemiBold
                                     }
                                 }
 
-                                // Finished Sticker Preview
+                                // Sticker generado
                                 Image {
                                     anchors.centerIn: parent
                                     visible: !Genmoji.isGenerating && Genmoji.currentStickerPath.length > 0
@@ -298,44 +349,46 @@ Kirigami.ApplicationWindow {
                                     smooth: true
                                 }
 
-                                // Placeholder when empty
+                                // Estado vacío
                                 ColumnLayout {
                                     anchors.centerIn: parent
                                     visible: !Genmoji.isGenerating && Genmoji.currentStickerPath.length === 0
-                                    spacing: Kirigami.Units.smallSpacing
+                                    spacing: CachyTheme.spacingSmall
 
                                     Kirigami.Icon {
                                         Layout.alignment: Qt.AlignHCenter
                                         source: "insert-image"
-                                        implicitWidth: 48
-                                        implicitHeight: 48
-                                        color: Kirigami.Theme.disabledTextColor
+                                        Layout.preferredWidth: 48
+                                        Layout.preferredHeight: 48
+                                        color: CachyTheme.textMuted
                                     }
 
-                                    QQC2.Label {
+                                    Text {
                                         Layout.alignment: Qt.AlignHCenter
-                                        text: "Escribe una idea arriba y pulsa «Crear Sticker»"
-                                        color: Kirigami.Theme.disabledTextColor
+                                        text: CachyI18n.i18n("Escribe una idea arriba y pulsa «Crear Sticker»")
+                                        color: CachyTheme.textMuted
+                                        font.pixelSize: 12
                                     }
                                 }
                             }
 
-                            // Action Toolbar for current sticker
+                            // Acciones del sticker actual
                             RowLayout {
                                 Layout.fillWidth: true
+                                Layout.minimumWidth: 0
                                 visible: !Genmoji.isGenerating && Genmoji.currentStickerPath.length > 0
-                                spacing: Kirigami.Units.smallSpacing
+                                spacing: 6
 
-                                QQC2.Button {
+                                CachyToolbarButton {
                                     Layout.fillWidth: true
-                                    icon.name: "edit-copy-symbolic"
-                                    text: "Copiar al portapapeles"
+                                    iconName: "edit-copy-symbolic"
+                                    text: CachyI18n.i18n("Copiar al portapapeles")
                                     onClicked: Genmoji.copyToClipboard(Genmoji.currentStickerPath)
                                 }
 
-                                QQC2.Button {
-                                    icon.name: "folder-symbolic"
-                                    text: "Ver archivo"
+                                CachyToolbarButton {
+                                    iconName: "folder-symbolic"
+                                    text: CachyI18n.i18n("Ver archivo")
                                     onClicked: Genmoji.openStickersFolder()
                                 }
                             }
@@ -343,23 +396,19 @@ Kirigami.ApplicationWindow {
                     }
                 }
 
-                // ==================== TAB 2: MY STICKERS GALLERY ====================
-                Rectangle {
+                // ==================== PÁGINA 2: GALERÍA DE STICKERS ============
+                CachyCard {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    radius: Kirigami.Units.mediumSpacing
-                    color: Kirigami.Theme.alternateBackgroundColor
-                    border.width: 1
-                    border.color: Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.12)
+                    Layout.minimumWidth: 0
 
-                    QQC2.ScrollView {
-                        anchors.fill: parent
-                        anchors.margins: Kirigami.Units.smallSpacing
+                    contentItem: QQC2.ScrollView {
+                        id: galleryScroll
                         clip: true
+                        QQC2.ScrollBar.vertical.policy: QQC2.ScrollBar.AsNeeded
 
                         GridView {
                             id: galleryGrid
-                            anchors.fill: parent
                             cellWidth: 130
                             cellHeight: 145
                             model: Genmoji.recentStickers
@@ -367,14 +416,21 @@ Kirigami.ApplicationWindow {
                             delegate: Rectangle {
                                 id: stickerCard
                                 required property var modelData
+
                                 width: 120
                                 height: 135
-                                radius: 8
-                                color: Kirigami.Theme.backgroundColor
+                                radius: CachyTheme.radiusSmall
+                                color: cardMouse.containsMouse
+                                    ? CachyTheme.cardBackgroundHover
+                                    : "transparent"
                                 border.width: 1
                                 border.color: cardMouse.containsMouse
-                                    ? Kirigami.Theme.highlightColor
-                                    : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.12)
+                                    ? CachyTheme.accentColor
+                                    : CachyTheme.specularBorder
+
+                                Behavior on color {
+                                    ColorAnimation { duration: 120 }
+                                }
 
                                 ColumnLayout {
                                     anchors.fill: parent
@@ -391,42 +447,39 @@ Kirigami.ApplicationWindow {
 
                                     RowLayout {
                                         Layout.fillWidth: true
+                                        Layout.minimumWidth: 0
                                         spacing: 2
 
-                                        QQC2.Label {
+                                        Text {
                                             Layout.fillWidth: true
+                                            Layout.minimumWidth: 0
                                             text: stickerCard.modelData.fileSizeText
-                                            font.pixelSize: Kirigami.Theme.smallFont.pixelSize - 1
-                                            color: Kirigami.Theme.disabledTextColor
+                                            font.pixelSize: 10
+                                            color: CachyTheme.textMuted
                                             elide: Text.ElideRight
                                         }
 
-                                        QQC2.ToolButton {
-                                            icon.name: "edit-copy-symbolic"
-                                            implicitWidth: 24
-                                            implicitHeight: 24
-                                            QQC2.ToolTip.visible: hovered
-                                            QQC2.ToolTip.text: "Copiar al portapapeles"
+                                        CachyToolbarButton {
+                                            iconName: "edit-copy-symbolic"
+                                            tooltipText: CachyI18n.i18n("Copiar al portapapeles")
                                             onClicked: Genmoji.copyToClipboard(stickerCard.modelData.path)
                                         }
 
-                                        QQC2.ToolButton {
-                                            icon.name: "edit-delete-symbolic"
-                                            implicitWidth: 24
-                                            implicitHeight: 24
-                                            QQC2.ToolTip.visible: hovered
-                                            QQC2.ToolTip.text: "Eliminar sticker"
+                                        CachyToolbarButton {
+                                            iconName: "edit-delete-symbolic"
+                                            tooltipText: CachyI18n.i18n("Eliminar el sticker")
                                             onClicked: Genmoji.deleteSticker(stickerCard.modelData.path)
                                         }
                                     }
                                 }
 
-                                MouseArea {
+                                HoverHandler {
                                     id: cardMouse
-                                    anchors.fill: parent
-                                    hoverEnabled: true
                                     cursorShape: Qt.PointingHandCursor
-                                    onClicked: Genmoji.copyToClipboard(stickerCard.modelData.path)
+                                }
+
+                                TapHandler {
+                                    onTapped: Genmoji.copyToClipboard(stickerCard.modelData.path)
                                 }
                             }
                         }
@@ -434,24 +487,19 @@ Kirigami.ApplicationWindow {
                 }
             }
 
-            // Bottom Status Bar
-            Rectangle {
-                Layout.fillWidth: true
-                height: 1
-                color: Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.12)
-            }
+            // -----------------------------------------------------------------
+            // Barra de estado
+            // -----------------------------------------------------------------
+            CachyDivider {}
 
-            RowLayout {
+            Text {
                 Layout.fillWidth: true
-                spacing: Kirigami.Units.smallSpacing
-
-                QQC2.Label {
-                    Layout.fillWidth: true
-                    text: Genmoji.statusMessage
-                    color: Kirigami.Theme.disabledTextColor
-                    font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-                    elide: Text.ElideRight
-                }
+                Layout.minimumWidth: 0
+                text: Genmoji.statusMessage
+                color: CachyTheme.textMuted
+                font.pixelSize: 11
+                elide: Text.ElideRight
             }
         }
+    ]
 }

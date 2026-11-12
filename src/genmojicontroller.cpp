@@ -140,7 +140,7 @@ void GenmojiController::generateAiSticker(const QString &prompt, const QString &
     // Construct enhanced prompt targeting clean stickers with white border contour
     QString styleKeywords;
     if (style == QLatin1String("3D Emoji")) {
-        styleKeywords = QStringLiteral("apple 3d emoji style, cute 3d clay render, smooth, vibrant, glossy");
+        styleKeywords = QStringLiteral("3d emoji style, cute 3d clay render, smooth, vibrant, glossy");
     } else if (style == QLatin1String("Pixel Art")) {
         styleKeywords = QStringLiteral("retro pixel art style, 16-bit, vibrant colors, clear silhouette");
     } else if (style == QLatin1String("Caricatura")) {
