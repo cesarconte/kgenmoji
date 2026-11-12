@@ -139,7 +139,9 @@ CachyWindow {
                 Layout.minimumWidth: 0
                 currentIndex: rootWindow.currentPage
 
-                // ==================== PÁGINA 0: MEZCLADOR DE EMOJIS ============
+                // =============================================================
+                // PÁGINA 0: MEZCLADOR DE EMOJIS
+                // =============================================================
                 RowLayout {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
@@ -153,13 +155,11 @@ CachyWindow {
                         Layout.minimumWidth: 0
                         Layout.preferredWidth: 3
 
-                        contentItem: QQC2.ScrollView {
-                            id: mashupScroll
-                            clip: true
-                            QQC2.ScrollBar.vertical.policy: QQC2.ScrollBar.AsNeeded
-
+                        contentItem: Item {
                             ListView {
                                 id: mashupList
+                                anchors.fill: parent
+                                clip: true
                                 spacing: 4
                                 model: Genmoji.curatedMashups
 
@@ -260,7 +260,9 @@ CachyWindow {
                     }
                 }
 
-                // ==================== PÁGINA 1: CREADOR DE STICKERS ============
+                // =============================================================
+                // PÁGINA 1: CREADOR DE STICKERS
+                // =============================================================
                 ColumnLayout {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
@@ -396,19 +398,19 @@ CachyWindow {
                     }
                 }
 
-                // ==================== PÁGINA 2: GALERÍA DE STICKERS ============
+                // =============================================================
+                // PÁGINA 2: GALERÍA DE STICKERS
+                // =============================================================
                 CachyCard {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     Layout.minimumWidth: 0
 
-                    contentItem: QQC2.ScrollView {
-                        id: galleryScroll
-                        clip: true
-                        QQC2.ScrollBar.vertical.policy: QQC2.ScrollBar.AsNeeded
-
+                    contentItem: Item {
                         GridView {
                             id: galleryGrid
+                            anchors.fill: parent
+                            clip: true
                             cellWidth: 130
                             cellHeight: 145
                             model: Genmoji.recentStickers
