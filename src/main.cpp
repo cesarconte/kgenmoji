@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     app.setOrganizationName(QStringLiteral("Cesar"));
     app.setOrganizationDomain(QStringLiteral("cesar.org"));
     app.setApplicationName(QStringLiteral("KGenmoji"));
-    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("face-smile")));
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("org.cesar.kgenmoji"), QIcon::fromTheme(QStringLiteral("face-smile"))));
 
     KAboutData aboutData(
         QStringLiteral("kgenmoji"),
