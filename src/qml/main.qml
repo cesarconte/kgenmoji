@@ -17,9 +17,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls as QQC2
 import QtQuick.Layouts
-import org.kde.kirigami as Kirigami
 import CachyOS.UI
 
 CachyWindow {
@@ -49,67 +47,37 @@ CachyWindow {
     // CABECERA — IZQUIERDA: marca
     // =========================================================================
     headerLeading: [
-        Kirigami.Icon {
+        CachyIcon {
             anchors.verticalCenter: parent.verticalCenter
-            source: "face-smile-symbolic"
-            width: 18
-            height: 18
+            name: "face-smile-symbolic"
+            size: 18
             color: CachyTheme.accentColor
         }
     ]
 
     // =========================================================================
-    // CABECERA — DERECHA: navegación y acciones
+    // CABECERA — CENTRO: navegación por pestañas (macOS Golden Gate)
+    // =========================================================================
+    headerCenter: [
+        CachySegmentedControl {
+            anchors.centerIn: parent
+            model: [
+                CachyI18n.i18n("Mezclador"),
+                CachyI18n.i18n("Creador IA"),
+                CachyI18n.i18n("Mis Stickers (%1)", Genmoji.recentStickers.length)
+            ]
+            currentIndex: rootWindow.currentPage
+            onCurrentIndexChanged: rootWindow.currentPage = currentIndex
+        }
+    ]
+
+    // =========================================================================
+    // CABECERA — DERECHA: acciones
     // =========================================================================
     headerActions: [
         RowLayout {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 6
-
-            // --- Navegación por pestañas ---
-            CachyToolbarButton {
-                checkable: true
-                checked: rootWindow.currentPage === 0
-                text: CachyI18n.i18n("Mezclador")
-                tooltipText: CachyI18n.i18n("Mezclar emojis prediseñados")
-                onToggled: (nextState) => {
-                    if (nextState) {
-                        rootWindow.currentPage = 0;
-                    }
-                }
-            }
-
-            CachyToolbarButton {
-                checkable: true
-                checked: rootWindow.currentPage === 1
-                text: CachyI18n.i18n("Creador IA")
-                tooltipText: CachyI18n.i18n("Generar un sticker con IA local")
-                onToggled: (nextState) => {
-                    if (nextState) {
-                        rootWindow.currentPage = 1;
-                    }
-                }
-            }
-
-            CachyToolbarButton {
-                checkable: true
-                checked: rootWindow.currentPage === 2
-                text: CachyI18n.i18n("Mis Stickers (%1)").arg(Genmoji.recentStickers.length)
-                tooltipText: CachyI18n.i18n("Galería de stickers guardados")
-                onToggled: (nextState) => {
-                    if (nextState) {
-                        rootWindow.currentPage = 2;
-                    }
-                }
-            }
-
-            // Separador duro antes de las acciones de archivo
-            Rectangle {
-                Layout.preferredWidth: 1
-                Layout.preferredHeight: 18
-                Layout.alignment: Qt.AlignVCenter
-                color: CachyTheme.hardDividerColor
-            }
 
             CachyToolbarButton {
                 iconName: "folder-pictures-symbolic"
@@ -196,7 +164,7 @@ CachyWindow {
                                             font.pixelSize: 18
                                         }
 
-                                        Text {
+                                        CachyLabel {
                                             Layout.fillWidth: true
                                             Layout.minimumWidth: 0
                                             text: mashupDelegate.modelData.name
@@ -288,7 +256,7 @@ CachyWindow {
                             }
                         }
 
-                        QQC2.ComboBox {
+                        CachyComboBox {
                             id: styleSelector
                             Layout.preferredWidth: 140
                             Layout.preferredHeight: 32
@@ -326,12 +294,12 @@ CachyWindow {
                                     visible: Genmoji.isGenerating
                                     spacing: CachyTheme.spacingSmall
 
-                                    QQC2.BusyIndicator {
+                                    CachyBusyIndicator {
                                         Layout.alignment: Qt.AlignHCenter
                                         running: Genmoji.isGenerating
                                     }
 
-                                    Text {
+                                    CachyLabel {
                                         Layout.alignment: Qt.AlignHCenter
                                         text: CachyI18n.i18n("Generando y perfilando el sticker…")
                                         color: CachyTheme.textPrimary
@@ -357,15 +325,14 @@ CachyWindow {
                                     visible: !Genmoji.isGenerating && Genmoji.currentStickerPath.length === 0
                                     spacing: CachyTheme.spacingSmall
 
-                                    Kirigami.Icon {
+                                    CachyIcon {
                                         Layout.alignment: Qt.AlignHCenter
-                                        source: "insert-image"
-                                        Layout.preferredWidth: 48
-                                        Layout.preferredHeight: 48
+                                        name: "insert-image"
+                                        size: 48
                                         color: CachyTheme.textMuted
                                     }
 
-                                    Text {
+                                    CachyLabel {
                                         Layout.alignment: Qt.AlignHCenter
                                         text: CachyI18n.i18n("Escribe una idea arriba y pulsa «Crear Sticker»")
                                         color: CachyTheme.textMuted
@@ -452,7 +419,7 @@ CachyWindow {
                                         Layout.minimumWidth: 0
                                         spacing: 2
 
-                                        Text {
+                                        CachyLabel {
                                             Layout.fillWidth: true
                                             Layout.minimumWidth: 0
                                             text: stickerCard.modelData.fileSizeText
@@ -494,7 +461,7 @@ CachyWindow {
             // -----------------------------------------------------------------
             CachyDivider {}
 
-            Text {
+            CachyLabel {
                 Layout.fillWidth: true
                 Layout.minimumWidth: 0
                 text: Genmoji.statusMessage

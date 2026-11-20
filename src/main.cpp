@@ -32,8 +32,11 @@ int main(int argc, char *argv[])
 
     app.setOrganizationName(QStringLiteral("Cesar"));
     app.setOrganizationDomain(QStringLiteral("cesar.org"));
-    app.setApplicationName(QStringLiteral("KGenmoji"));
+    app.setApplicationName(QStringLiteral("kgenmoji"));
+    app.setDesktopFileName(QStringLiteral("org.cesar.kgenmoji"));
     app.setWindowIcon(QIcon::fromTheme(QStringLiteral("org.cesar.kgenmoji"), QIcon::fromTheme(QStringLiteral("face-smile"))));
+
+    KLocalizedString::setApplicationDomain("kgenmoji");
 
     KAboutData aboutData(
         QStringLiteral("kgenmoji"),
@@ -43,6 +46,7 @@ int main(int argc, char *argv[])
         KAboutLicense::GPL_V3,
         i18n("© 2026 Cesar")
     );
+    aboutData.setDesktopFileName(QStringLiteral("org.cesar.kgenmoji"));
     KAboutData::setApplicationData(aboutData);
 
     GenmojiController controller;
@@ -55,9 +59,8 @@ int main(int argc, char *argv[])
     }
 
     QQmlApplicationEngine engine;
-    // The CachyOS.UI design system (Liquid Glass) is installed system wide or
-    // in the user prefix.
-    engine.addImportPath(QStringLiteral("/home/cesar/.local/lib/qt6/qml"));
+    // The CachyOS.UI design system (Liquid Glass) is installed system-wide in /usr.
+    engine.addImportPath(QStringLiteral("/usr/lib/qt6/qml"));
     engine.rootContext()->setContextProperty(QStringLiteral("Genmoji"), &controller);
 
     const QUrl url(QStringLiteral("qrc:/qt/qml/org/cesar/kgenmoji/main.qml"));
