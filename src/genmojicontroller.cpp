@@ -223,8 +223,10 @@ void GenmojiController::onDownloadFinished(QNetworkReply *reply)
 
 void GenmojiController::processStickerWithLiftSubject(const QString &tempPath, const QString &finalPath)
 {
-    const QString homeDir = QDir::homePath();
-    const QString liftSubjectBin = homeDir + QStringLiteral("/.local/bin/kliftsubject");
+    QString liftSubjectBin = QStandardPaths::findExecutable(QStringLiteral("kliftsubject"));
+    if (liftSubjectBin.isEmpty() || !QFile::exists(liftSubjectBin)) {
+        liftSubjectBin = QStringLiteral("/usr/bin/kliftsubject");
+    }
 
     if (QFile::exists(liftSubjectBin)) {
         QProcess proc;
